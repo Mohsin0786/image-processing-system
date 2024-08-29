@@ -14,7 +14,9 @@ const app = express();
 app.use(express.json());
 app.use('/api', uploadRoutes);
 app.use('/api', statusRoutes);
-
+app.get('/', (req, res) => {
+  res.send('Server running smoothly!');
+});
 
 mongoConnect(); // MongoDB connection
 
