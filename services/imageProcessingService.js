@@ -6,12 +6,13 @@ const path = require('path');
 const RequestProcessing = require('../models/RequestProcessing');
 const axios = require('axios');
 
-// Function to send a webhook notification
-const sendWebhookNotification = async (requestId) => {
+// Function to send a webhook notification4
+// http://localhost:5000/api/upload
+const sendWebhookNotification = async (requestId,status) => {
   try {
-    const response = await axios.post('https://webhook-test.com/3d68745b91cd7da2d38f381583109644', {
+    const response = await axios.post(process.env.WEBHOOK_URL, {
       requestId,
-      status: 'completed'
+      status
     });
     console.log('Webhook notification sent:', response.data);
   } catch (error) {
@@ -39,23 +40,24 @@ const processImage = (imageUrl, outputUrl, hash, requestId, serialNumber,total_i
         // Check if all images for the request are processed
         if (result.webhook) {
           // Send webhook notification after processing is complete
-          await sendWebhookNotification(requestId);
+          await sendWebhookNotification(requestId,'completed');
 
           // Update the overall processing request status to "completed"
-          await RequestProcessing.findOneAndUpdate(
-            { requestId },
-            { status: 'completed' },
-            { new: true }
-          );
+          // await RequestProcessing.findOneAndUpdate(
+          //   { requestId },
+          //   { status: 'completed' },
+          //   { new: true }
+          // );
         }
 
         resolve(result.outputUrl); // Return the output URL
       } else {
-        await RequestProcessing.findOneAndUpdate(
-          { requestId },
-          { status: 'failed' },
-          { new: true }
-        );
+        // await RequestProcessing.findOneAndUpdate(
+        //   { requestId },
+        //   { status: 'failed' },
+        //   { new: true }
+        // );
+        await sendWebhookNotification(requestId,'failed');
         console.error(`Failed to process image for request ${requestId}: ${result.error}`);
         reject(result.error);
       }

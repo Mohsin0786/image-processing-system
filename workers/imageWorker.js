@@ -14,7 +14,7 @@ AWS.config.update({
 });
 
 const s3 = new AWS.S3();
-parentPort.on('message', async ({ imageUrl, outputUrl,hash,serialNumber,total_images,image_count}) => {
+parentPort.on('message', async ({ imageUrl, outputUrl,hash,total_images,image_count}) => {
   try {
     const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
   
@@ -28,7 +28,6 @@ parentPort.on('message', async ({ imageUrl, outputUrl,hash,serialNumber,total_im
         Body: processedImage,
       };
       await s3.upload(uploadParams).promise();
-      console.log("Image downloaded successfully.",outputUrl);
       if (image_count === parseInt(total_images)) {
         console.log("All images processed.");
         parentPort.postMessage({

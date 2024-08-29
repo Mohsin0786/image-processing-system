@@ -10,8 +10,7 @@ const checkStatus = async (req, res) => {
 
   res.json({
     status: processingRequest.status,
-    products: processingRequest.products,
-    // outputImageUrls: processingRequest.outputImageUrls,
+    // products: processingRequest.products,
   });
 };
 
