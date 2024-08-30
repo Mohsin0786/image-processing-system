@@ -42,21 +42,12 @@ const processImage = (imageUrl, outputUrl, hash, requestId, serialNumber,total_i
           // Send webhook notification after processing is complete
           await sendWebhookNotification(requestId,'completed');
 
-          // Update the overall processing request status to "completed"
-          // await RequestProcessing.findOneAndUpdate(
-          //   { requestId },
-          //   { status: 'completed' },
-          //   { new: true }
-          // );
+        
         }
 
         resolve(result.outputUrl); // Return the output URL
       } else {
-        // await RequestProcessing.findOneAndUpdate(
-        //   { requestId },
-        //   { status: 'failed' },
-        //   { new: true }
-        // );
+      
         await sendWebhookNotification(requestId,'failed');
         console.error(`Failed to process image for request ${requestId}: ${result.error}`);
         reject(result.error);
